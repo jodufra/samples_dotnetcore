@@ -1,0 +1,11 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Application.Common
+{
+    public static class Constants
+    {
+        public const int DEFAULT_CACHE_SECONDS = 5;
+    }
+}
