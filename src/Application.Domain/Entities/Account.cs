@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using Application.Domain.Abstractions;
+using Application.Domain.Infrastructure;
 
 namespace Application.Domain.Entities
 {
-    public class Account : IEntity
+    public class Account : Entity
     {
         public Account()
         {
             Users = new HashSet<User>();
         }
 
-        public int Id { get; set; }
         public string Name { get; set; }
-        public DateTime DateCreated { get; set; }
-        public DateTime? DateUpdated { get; set; }
 
         public ICollection<User> Users { get; private set; }
     }

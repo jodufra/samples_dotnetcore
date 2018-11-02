@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using Application.Business.Abstractions;
+using System.Threading;
+using System.Threading.Tasks;
+using Application.Business.Infrastructure;
 using Application.Common;
-using Application.Domain.Abstractions;
+using Application.Domain.Infrastructure;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Application.Persistence.Repositories
 {
-    public class EfCachedRepository<T, TRepository> : IReadOnlyRepository<T> where TRepository : IRepository<T> where T : class, IEntity, new()
+    public class EfCachedRepository<TEntity, TRepository> : IReadOnlyRepository<TEntity> 
+        where TRepository : EfRepository<TEntity> 
+        where TEntity : Entity
     {
         private readonly TRepository repository;
         private readonly IMemoryCache cache;
@@ -19,29 +23,70 @@ namespace Application.Persistence.Repositories
             this.repository = repository;
             this.cache = cache;
 
-            cacheKey = typeof(T).Name;
+            cacheKey = typeof(TEntity).Name;
             cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(relative: TimeSpan.FromSeconds(Constants.DEFAULT_CACHE_SECONDS));
         }
 
-        public T GetById(int id)
+        public virtual List<TEntity> List()
+        {
+            return cache.GetOrCreate(cacheKey, entry =>
+            {
+                entry.SetOptions(cacheOptions);
+                return repository.List();
+            });
+        }
+
+        public TEntity FindById(int id)
         {
             var key = $"{cacheKey}-{id}";
 
             return cache.GetOrCreate(key, entry =>
             {
                 entry.SetOptions(cacheOptions);
-                return repository.GetById(id);
+                return repository.FindById(id);
             });
         }
 
-        public virtual List<T> GetAll()
+        public RepositoryResult<TEntity> Find(RepositoryRequest<TEntity> request)
         {
-            return cache.GetOrCreate(cacheKey, entry =>
+            var key = $"{cacheKey}-Find-{request.GetHashCode()}";
+
+            return cache.GetOrCreate(key, entry =>
             {
                 entry.SetOptions(cacheOptions);
-                return repository.GetAll();
+                return repository.Find(request);
             });
         }
 
+        public Task<List<TEntity>> ListAsync(CancellationToken cancellationToken)
+        {
+            return cache.GetOrCreateAsync(cacheKey, entry =>
+            {
+                entry.SetOptions(cacheOptions);
+                return repository.ListAsync(cancellationToken);
+            });
+        }
+
+        public Task<TEntity> FindByIdAsync(int id, CancellationToken cancellationToken)
+        {
+            var key = $"{cacheKey}-{id}";
+
+            return cache.GetOrCreateAsync(key, entry =>
+            {
+                entry.SetOptions(cacheOptions);
+                return repository.FindByIdAsync(id, cancellationToken);
+            });
+        }
+
+        public Task<RepositoryResult<TEntity>> FindAsync(RepositoryRequest<TEntity> request, CancellationToken cancellationToken)
+        {
+            var key = $"{cacheKey}-Find-{request.GetHashCode()}";
+
+            return cache.GetOrCreateAsync(key, entry =>
+            {
+                entry.SetOptions(cacheOptions);
+                return repository.FindAsync(request, cancellationToken);
+            });
+        }
     }
 }

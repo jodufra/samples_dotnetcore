@@ -3,15 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Domain", "Application.Domain\Application.Domain.csproj", "{E793DE46-8B57-4EDF-9951-AFC55E9AE5F7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{C2C5496C-A76D-4F93-8C95-16EA7364AEBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Domain", "Application.Domain\Application.Domain.csproj", "{E793DE46-8B57-4EDF-9951-AFC55E9AE5F7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A22F7E8A-7FEC-4DA9-B20F-862781EAF4C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Common", "Application.Common\Application.Common.csproj", "{76256548-97D6-4EBA-A387-DA717B57F208}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Common", "Application.Common\Application.Common.csproj", "{76256548-97D6-4EBA-A387-DA717B57F208}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Business", "Application.Business\Application.Business.csproj", "{FD74E443-42A8-4301-A6C9-D194F670F70C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Business", "Application.Business\Application.Business.csproj", "{FD74E443-42A8-4301-A6C9-D194F670F70C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{63A21DFE-6672-4C55-8B35-8D6DE24A49AD}"
 EndProject
@@ -19,9 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{5AF55300-9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{95C65650-61F3-41AB-8D84-13497682689D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Infrastructure", "Application.Infrastructure\Application.Infrastructure.csproj", "{5685D6FF-3A15-4BD0-8144-2A85DB09CE4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Infrastructure", "Application.Infrastructure\Application.Infrastructure.csproj", "{5685D6FF-3A15-4BD0-8144-2A85DB09CE4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Persistence", "Application.Persistence\Application.Persistence.csproj", "{655183C8-DD85-4C14-BB96-EC5AB415A515}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Persistence", "Application.Persistence\Application.Persistence.csproj", "{655183C8-DD85-4C14-BB96-EC5AB415A515}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,9 +55,6 @@ Global
 		{E793DE46-8B57-4EDF-9951-AFC55E9AE5F7} = {5AF55300-9246-4ABC-B90C-F1E52E5F351B}
 		{76256548-97D6-4EBA-A387-DA717B57F208} = {63A21DFE-6672-4C55-8B35-8D6DE24A49AD}
 		{FD74E443-42A8-4301-A6C9-D194F670F70C} = {5AF55300-9246-4ABC-B90C-F1E52E5F351B}
-		{63A21DFE-6672-4C55-8B35-8D6DE24A49AD} = {C2C5496C-A76D-4F93-8C95-16EA7364AEBE}
-		{5AF55300-9246-4ABC-B90C-F1E52E5F351B} = {C2C5496C-A76D-4F93-8C95-16EA7364AEBE}
-		{95C65650-61F3-41AB-8D84-13497682689D} = {C2C5496C-A76D-4F93-8C95-16EA7364AEBE}
 		{5685D6FF-3A15-4BD0-8144-2A85DB09CE4A} = {95C65650-61F3-41AB-8D84-13497682689D}
 		{655183C8-DD85-4C14-BB96-EC5AB415A515} = {95C65650-61F3-41AB-8D84-13497682689D}
 	EndGlobalSection
