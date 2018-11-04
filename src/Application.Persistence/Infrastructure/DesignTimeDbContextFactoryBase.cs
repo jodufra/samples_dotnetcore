@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Application.Common;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.IO;
 
 namespace Application.Persistence.Infrastructure
 {
@@ -10,18 +10,24 @@ namespace Application.Persistence.Infrastructure
     {
         private const string ConnectionStringName = "Database";
         private const string AspNetCoreEnvironment = "ASPNETCORE_ENVIRONMENT";
+        private readonly IDirectory directory;
+
+        protected DesignTimeDbContextFactoryBase(IDirectory directory)
+        {
+            this.directory = directory;
+        }
 
         protected abstract TContext CreateNewInstance(DbContextOptions<TContext> options);
 
         public TContext CreateDbContext(string[] args)
         {
-            return Create(Directory.GetCurrentDirectory(), Environment.GetEnvironmentVariable(AspNetCoreEnvironment));
+            return Create(directory.BaseDirectory, Environment.GetEnvironmentVariable(AspNetCoreEnvironment));
         }
 
-        private TContext Create(string basePath, string environmentName)
+        private TContext Create(string baseDirectory, string environmentName)
         {
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(basePath + "\\..\\Application..WebUI")
+                .SetBasePath(baseDirectory)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.Local.json", optional: true)
                 .AddJsonFile($"appsettings.{environmentName}.json", optional: true)

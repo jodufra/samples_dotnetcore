@@ -14,7 +14,7 @@ namespace Application.Persistence
         {
         }
 
-        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Entity> Accounts { get; set; }
 
         public DbSet<User> Users { get; set; }
 

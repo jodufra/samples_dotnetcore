@@ -1,4 +1,4 @@
-﻿using Application.Business.Commands.Users;
+﻿using Application.Business.Requests.Users;
 using Application.Domain.Entities;
 using AutoMapper;
 

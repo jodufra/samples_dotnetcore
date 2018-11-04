@@ -1,4 +1,5 @@
-﻿using Application.Business.Infrastructure;
+﻿using Application.Business.Interfaces;
+using Application.Business.Models;
 using Application.Common;
 using Application.Domain.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Persistence.Repositories
 {
-    public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : Entity
+    public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
         protected readonly AppDbContext context;
         protected readonly IDateTime dateTime;

@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Application.Business.Infrastructure;
+﻿using Application.Business.Interfaces;
+using Application.Business.Models;
 using Application.Common;
 using Application.Domain.Infrastructure;
 using Microsoft.Extensions.Caching.Memory;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Persistence.Repositories
 {
-    public class EfCachedRepository<TEntity, TRepository> : IReadOnlyRepository<TEntity> 
-        where TRepository : EfRepository<TEntity> 
-        where TEntity : Entity
+    public class EfCachedRepository<TEntity, TRepository> : IReadOnlyRepository<TEntity>
+        where TRepository : EfRepository<TEntity>
+        where TEntity : BaseEntity
     {
         private readonly TRepository repository;
         private readonly IMemoryCache cache;
