@@ -1,10 +1,14 @@
-using Application.Business.Requests.Users;
+using System.Reflection;
+using Application.Business;
 using Application.Business.Infrastructure;
+using Application.Business.Interfaces;
+using Application.Business.Requests.Users;
 using Application.Common;
 using Application.Infrastructure;
 using Application.Persistence;
 using Application.Persistence.Repositories;
 using Application.Website.Filters;
+using AutoMapper;
 using FluentValidation.AspNetCore;
 using MediatR;
 using MediatR.Pipeline;
@@ -15,7 +19,6 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 
@@ -46,12 +49,14 @@ namespace Application.Website
             services.AddMediatR(typeof(RequestPerformanceBehaviour<,>).GetTypeInfo().Assembly);
 
             // Add DbContext using SQL Server Provider
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AppDatabase")));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AppDatabase")));
 
             // Add Repositories
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped(typeof(IReadOnlyRepository<>), typeof(EfCachedRepository<,>));
+
+            // Add Auto Mapper
+            services.AddAutoMapper(typeof(DomainProfile).GetTypeInfo().Assembly);
 
             services
                 .AddMvc(options => options.Filters.Add(typeof(CustomExceptionFilterAttribute)))

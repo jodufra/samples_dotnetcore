@@ -1,5 +1,6 @@
 ﻿using Application.Business.Exceptions;
 using Application.Business.Infrastructure;
+using Application.Business.Interfaces;
 using Application.Domain.Infrastructure;
 using AutoMapper;
 using MediatR;

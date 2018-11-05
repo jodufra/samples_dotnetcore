@@ -1,9 +1,9 @@
-﻿using Application.Business.Infrastructure;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Application.Business.Interfaces;
 using Application.Domain.Infrastructure;
 using AutoMapper;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Business.Requests.Abstractions
 {

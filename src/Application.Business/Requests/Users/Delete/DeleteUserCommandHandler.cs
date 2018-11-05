@@ -1,6 +1,7 @@
 ﻿using Application.Business.Requests.Abstractions;
 using Application.Business.Infrastructure;
 using Application.Domain.Entities;
+using Application.Business.Interfaces;
 
 namespace Application.Business.Requests.Users
 {
