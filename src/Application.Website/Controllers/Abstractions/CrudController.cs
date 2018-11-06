@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace Application.Website.Controllers.Abstractions
 {
-    [ApiController]
-    [Route("api/[controller]/[action]")]
     public abstract class CrudController<TCreateCommand, TUpdateCommand, TDeleteComand, TDetailQuery, TListQuery, TDetailModel, TListModel, TListItemModel>
         : BaseController
         where TCreateCommand : CreateCommand, new()

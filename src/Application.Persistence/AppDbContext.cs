@@ -6,7 +6,7 @@ namespace Application.Persistence
 {
     public class AppDbContext : DbContext
     {
-        protected AppDbContext()
+        public AppDbContext()
         {
         }
 
@@ -14,8 +14,11 @@ namespace Application.Persistence
         {
         }
 
-        public DbSet<Entity> Accounts { get; set; }
-
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Entity> Entities { get; set; }
+        public DbSet<UserCourse> UserCourses { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NSwag.AspNetCore;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 
@@ -74,6 +75,8 @@ namespace Application.Website
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddSwagger();
         }
 
         // This method gets called by the runtime. 
@@ -95,6 +98,14 @@ namespace Application.Website
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            //app.UseSwaggerUi3(s =>
+            //{
+            //    s.SwaggerUiRoute = "/api";
+            //    s.SwaggerRoute = "/api/specification.json";
+            //});
+
+            app.UseSwaggerUi3WithApiExplorer();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -112,6 +123,7 @@ namespace Application.Website
                 if (env.IsDevelopment())
                 {
                     spa.UseAngularCliServer(npmScript: "start");
+                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                 }
             });
         }

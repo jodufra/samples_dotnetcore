@@ -6,6 +6,10 @@ namespace Application.Persistence
 {
     public class AppDbContextFactory : DesignTimeDbContextFactoryBase<AppDbContext>
     {
+        public AppDbContextFactory() : this(new DesignTimeDirectory())
+        {
+        }
+
         public AppDbContextFactory(IDirectory directory) : base(directory)
         {
         }
