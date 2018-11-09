@@ -7,7 +7,7 @@ namespace Application.Website.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class EntityController : CrudController<
+    public class EntityController : MediatorController<
         CreateEntityCommand,
         UpdateEntityCommand,
         DeleteEntityCommand,

@@ -7,7 +7,7 @@ namespace Application.Website.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class UserController : CrudController<
+    public class UserController : MediatorController<
         CreateUserCommand,
         UpdateUserCommand,
         DeleteUserCommand,

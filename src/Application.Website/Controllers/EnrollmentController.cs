@@ -7,7 +7,7 @@ namespace Application.Website.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class EnrollmentController : CrudController<
+    public class EnrollmentController : MediatorController<
         CreateEnrollmentCommand,
         UpdateEnrollmentCommand,
         DeleteEnrollmentCommand,

@@ -7,7 +7,7 @@ namespace Application.Website.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class DepartmentController : CrudController<
+    public class DepartmentController : MediatorController<
         CreateDepartmentCommand,
         UpdateDepartmentCommand,
         DeleteDepartmentCommand,
