@@ -3,6 +3,7 @@ using Application.Website.Controllers.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Application.Website.Controllers
@@ -32,10 +33,6 @@ namespace Application.Website.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesDefaultResponseType]
         public async Task<IActionResult> Update(int id, [FromBody]UpdateCourseCommand command)
         {
             if (command == null || command.Id != id)
@@ -43,19 +40,17 @@ namespace Application.Website.Controllers
                 return BadRequest();
             }
 
-            return Ok(await Mediator.Send(command));
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesDefaultResponseType]
         public async Task<IActionResult> Delete(int id)
         {
             await Mediator.Send(new DeleteCourseCommand { Id = id });
 
-            return NoContent();
+            return Ok();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Application.Domain.Infrastructure;
+using Application.Domain.SeedWork;
 
 namespace Application.Domain.Entities
 {

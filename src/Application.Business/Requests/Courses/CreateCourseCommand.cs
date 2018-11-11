@@ -1,16 +1,19 @@
 ﻿using Application.Business.Interfaces;
-using Application.Business.Requests.Abstractions;
 using Application.Domain.Entities;
+using AutoMapper;
 using FluentValidation;
+using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Business.Requests.Courses
 {
-    public class CreateCourseCommand : CreateCommand
+    public class CreateCourseCommand : IRequest<int>
     {
         public string Name { get; set; }
     }
 
-    public class CreateCourseCommandValidator : CreateCommandValidator<CreateCourseCommand>
+    public class CreateCourseCommandValidator : AbstractValidator<CreateCourseCommand>
     {
         public CreateCourseCommandValidator()
         {
@@ -18,10 +21,24 @@ namespace Application.Business.Requests.Courses
         }
     }
 
-    public class CreateCourseCommandHandler : CreateCommandHandler<CreateCourseCommand, Course>
+    public class CreateCourseCommandHandler : IRequestHandler<CreateCourseCommand, int>
     {
-        public CreateCourseCommandHandler(IRepository<Course> repository) : base(repository)
+        private readonly IMapper mapper;
+        private readonly IRepository<Course> repository;
+
+        public CreateCourseCommandHandler(IRepository<Course> repository, IMapper mapper)
         {
+            this.repository = repository;
+            this.mapper = mapper;
+        }
+
+        public async Task<int> Handle(CreateCourseCommand request, CancellationToken cancellationToken)
+        {
+            var entity = mapper.Map<CreateCourseCommand, Course>(request);
+
+            await repository.AddAsync(entity, cancellationToken);
+
+            return entity.Id;
         }
     }
 }

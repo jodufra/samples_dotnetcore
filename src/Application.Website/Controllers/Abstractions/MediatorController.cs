@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Application.Website.Controllers.Abstractions
 {
@@ -16,6 +17,11 @@ namespace Application.Website.Controllers.Abstractions
         protected MediatorController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        protected CreatedResult Created(int id)
+        {
+            return Created(new Uri(id.ToString(), UriKind.Relative), id);
         }
     }
 }

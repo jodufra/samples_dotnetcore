@@ -1,5 +1,5 @@
 ﻿using Application.Business.Models;
-using Application.Domain.Infrastructure;
+using Application.Domain.SeedWork;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

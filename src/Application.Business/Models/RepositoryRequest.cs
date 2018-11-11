@@ -1,4 +1,5 @@
-﻿using Application.Domain.Infrastructure;
+﻿using Application.Common;
+using Application.Domain.SeedWork;
 using System;
 
 namespace Application.Business.Models
@@ -7,6 +8,8 @@ namespace Application.Business.Models
     {
         public RepositoryRequest()
         {
+            PageId = 1;
+            PageSize = Constants.DEFAULT_PAGE_SIZE;
             Query = new RepositoryQuery<T>();
             Order = RepositoryOrder<T>.OrderByDescending(q => q.DateCreated);
         }

@@ -1,4 +1,4 @@
-﻿using Application.Domain.Infrastructure;
+﻿using Application.Domain.SeedWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;

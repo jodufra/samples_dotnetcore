@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Reflection;
 using Application.Business;
 using Application.Business.Infrastructure;
@@ -40,21 +41,23 @@ namespace Application.Website
         {
             // Add framework services.
             services.AddTransient<IDateTime, MachineDateTime>();
-            services.AddTransient<IDirectory, MachineIDirectory>();
+            services.AddTransient<IDirectory, MachineDirectory>();
             services.AddTransient<IRandom, MachineRandom>();
 
             // Add MediatR
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
-            services.AddMediatR(typeof(RequestPerformanceBehaviour<,>).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(CreateUserCommandHandler).GetTypeInfo().Assembly);
+
+            services.AddTransient(typeof(IEventDispatcher), typeof(EventDispatcher));
 
             // Add DbContext using SQL Server Provider
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AppDatabase")));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Database")));
 
             // Add Repositories
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-            services.AddScoped(typeof(IReadOnlyRepository<>), typeof(EfCachedRepository<,>));
+            services.AddScoped(typeof(IReadOnlyRepository<>), typeof(EfCachedRepository<>));
 
             // Add Auto Mapper
             services.AddAutoMapper(typeof(DomainProfile).GetTypeInfo().Assembly);
@@ -98,12 +101,6 @@ namespace Application.Website
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            //app.UseSwaggerUi3(s =>
-            //{
-            //    s.SwaggerUiRoute = "/api";
-            //    s.SwaggerRoute = "/api/specification.json";
-            //});
-
             app.UseSwaggerUi3WithApiExplorer();
 
             app.UseMvc(routes =>
@@ -123,7 +120,6 @@ namespace Application.Website
                 if (env.IsDevelopment())
                 {
                     spa.UseAngularCliServer(npmScript: "start");
-                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                 }
             });
         }

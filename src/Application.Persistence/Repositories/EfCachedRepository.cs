@@ -1,7 +1,7 @@
 ﻿using Application.Business.Interfaces;
 using Application.Business.Models;
 using Application.Common;
-using Application.Domain.Infrastructure;
+using Application.Domain.SeedWork;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
@@ -10,16 +10,15 @@ using System.Threading.Tasks;
 
 namespace Application.Persistence.Repositories
 {
-    public class EfCachedRepository<TEntity, TRepository> : IReadOnlyRepository<TEntity>
-        where TRepository : EfRepository<TEntity>
+    public class EfCachedRepository<TEntity> : IReadOnlyRepository<TEntity>
         where TEntity : BaseEntity
     {
-        private readonly TRepository repository;
+        private readonly IRepository<TEntity> repository;
         private readonly IMemoryCache cache;
         private readonly string cacheKey;
         private readonly MemoryCacheEntryOptions cacheOptions;
 
-        public EfCachedRepository(TRepository repository, IMemoryCache cache)
+        public EfCachedRepository(IRepository<TEntity> repository, IMemoryCache cache)
         {
             this.repository = repository;
             this.cache = cache;

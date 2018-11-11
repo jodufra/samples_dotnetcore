@@ -1,16 +1,19 @@
 ﻿using Application.Business.Interfaces;
-using Application.Business.Requests.Abstractions;
 using Application.Domain.Entities;
+using AutoMapper;
 using FluentValidation;
+using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Business.Requests.Entities
 {
-    public class CreateEntityCommand : CreateCommand
+    public class CreateEntityCommand : IRequest<int>
     {
         public string Name { get; set; }
     }
 
-    public class CreateEntityCommandValidator : CreateCommandValidator<CreateEntityCommand>
+    public class CreateEntityCommandValidator : AbstractValidator<CreateEntityCommand>
     {
         public CreateEntityCommandValidator()
         {
@@ -18,10 +21,24 @@ namespace Application.Business.Requests.Entities
         }
     }
 
-    public class CreateEntityCommandHandler : CreateCommandHandler<CreateEntityCommand, Entity>
+    public class CreateEntityCommandHandler : IRequestHandler<CreateEntityCommand, int>
     {
-        public CreateEntityCommandHandler(IRepository<Entity> repository) : base(repository)
+        private readonly IMapper mapper;
+        private readonly IRepository<Entity> repository;
+
+        public CreateEntityCommandHandler(IRepository<Entity> repository, IMapper mapper)
         {
+            this.repository = repository;
+            this.mapper = mapper;
+        }
+
+        public async Task<int> Handle(CreateEntityCommand request, CancellationToken cancellationToken)
+        {
+            var entity = mapper.Map<CreateEntityCommand, Entity>(request);
+
+            await repository.AddAsync(entity, cancellationToken);
+
+            return entity.Id;
         }
     }
 }

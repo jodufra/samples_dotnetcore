@@ -6,7 +6,7 @@ namespace Application.Domain.Enumerations
 {
     public enum UserType
     {
-        User = 0,
-        Administrator = 1
+        User,
+        Administrator
     }
 }

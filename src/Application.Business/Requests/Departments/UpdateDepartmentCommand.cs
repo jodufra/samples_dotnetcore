@@ -1,27 +1,54 @@
-﻿using Application.Business.Interfaces;
-using Application.Business.Requests.Abstractions;
+﻿using Application.Business.Exceptions;
+using Application.Business.Interfaces;
 using Application.Domain.Entities;
+using AutoMapper;
 using FluentValidation;
+using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Business.Requests.Departments
 {
-    public class UpdateDepartmentCommand : UpdateCommand
+    public class UpdateDepartmentCommand : IRequest
     {
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 
-    public class UpdateDepartmentCommandValidator : UpdateCommandValidator<UpdateDepartmentCommand>
+    public class UpdateDepartmentCommandValidator : AbstractValidator<UpdateDepartmentCommand>
     {
         public UpdateDepartmentCommandValidator()
         {
+            RuleFor(q => q.Id).GreaterThan(0);
             RuleFor(q => q.Name).NotEmpty();
         }
     }
 
-    public class UpdateDepartmentCommandHandler : UpdateCommandHandler<UpdateDepartmentCommand, Department>
+    public class UpdateDepartmentCommandHandler : IRequestHandler<UpdateDepartmentCommand, Unit>
     {
-        public UpdateDepartmentCommandHandler(IRepository<Department> repository) : base(repository)
+        private readonly IMapper mapper;
+        private readonly IRepository<Department> repository;
+
+        public UpdateDepartmentCommandHandler(IRepository<Department> repository, IMapper mapper)
         {
+            this.repository = repository;
+            this.mapper = mapper;
+        }
+
+        public async Task<Unit> Handle(UpdateDepartmentCommand request, CancellationToken cancellationToken)
+        {
+            var entity = await repository.FindByIdAsync(request.Id, cancellationToken);
+
+            if (entity == null)
+            {
+                throw new NotFoundException(typeof(Department).Name, request.Id);
+            }
+
+            entity = mapper.Map(request, entity);
+
+            await repository.UpdateAsync(entity, cancellationToken);
+
+            return Unit.Value;
         }
     }
 }

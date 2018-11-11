@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Application.Infrastructure
 {
-    public class MachineIDirectory : IDirectory
+    public class MachineDirectory : IDirectory
     {
         public string BaseDirectory => AppDomain.CurrentDomain.BaseDirectory;
     }

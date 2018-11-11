@@ -1,7 +1,7 @@
 ﻿using Application.Business.Interfaces;
 using Application.Business.Models;
 using Application.Common;
-using Application.Domain.Infrastructure;
+using Application.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,40 +23,40 @@ namespace Application.Persistence.Repositories
             this.dateTime = dateTime;
         }
 
+        public IUnitOfWork UnitOfWork { get => context; }
+
         public List<TEntity> List()
         {
-            var t = ListAsync(default);
-            t.Wait();
-            return t.Result;
+            return ListAsync(default).GetAwaiter().GetResult();
         }
 
         public TEntity FindById(int id)
         {
-            var t = FindByIdAsync(id, default);
-            t.Wait();
-            return t.Result;
+            return FindByIdAsync(id, default).GetAwaiter().GetResult();
         }
 
         public RepositoryResult<TEntity> Find(RepositoryRequest<TEntity> request)
         {
-            var t = FindAsync(request, default);
-            t.Wait();
-            return t.Result;
+            return FindAsync(request, default).GetAwaiter().GetResult();
         }
 
         public void Add(TEntity entity)
         {
-            AddAsync(entity, default).Wait();
+            entity.DateCreated = dateTime.Now;
+
+            context.Set<TEntity>().Add(entity);
         }
 
         public void Remove(TEntity entity)
         {
-            RemoveAsync(entity, default).Wait();
+            context.Set<TEntity>().Remove(entity);
         }
 
         public void Update(TEntity entity)
         {
-            UpdateAsync(entity, default).Wait();
+            entity.DateUpdated = dateTime.Now;
+
+            context.Entry(entity).State = EntityState.Modified;
         }
 
         public Task<TEntity> FindByIdAsync(int id, CancellationToken cancellationToken)
@@ -109,23 +109,19 @@ namespace Application.Persistence.Repositories
 
         public Task AddAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            entity.DateCreated = dateTime.Now;
-
-            context.Set<TEntity>().Add(entity);
+            Add(entity);
             return context.SaveChangesAsync(cancellationToken);
         }
 
         public Task RemoveAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            context.Set<TEntity>().Remove(entity);
+            Remove(entity);
             return context.SaveChangesAsync(cancellationToken);
         }
 
         public Task UpdateAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            entity.DateUpdated = dateTime.Now;
-
-            context.Entry(entity).State = EntityState.Modified;
+            Update(entity);
             return context.SaveChangesAsync(cancellationToken);
         }
     }

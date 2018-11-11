@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 using System.Net;
 
 namespace Application.Website.Filters
@@ -31,11 +32,7 @@ namespace Application.Website.Filters
 
                 var isDevelopment = GetEnvironment(context.HttpContext)?.IsDevelopment() ?? true;
 
-                result = new
-                {
-                    error = new[] { context.Exception.Message },
-                    stackTrace = isDevelopment ? context.Exception.StackTrace : string.Empty
-                };
+                result = CreateExceptionResult(context.Exception, isDevelopment);
             }
 
             context.HttpContext.Response.ContentType = "application/json";
@@ -46,6 +43,43 @@ namespace Application.Website.Filters
         private static IHostingEnvironment GetEnvironment(HttpContext httpContext)
         {
             return httpContext?.RequestServices.GetService<IHostingEnvironment>();
+        }
+
+        private static object CreateExceptionResult(Exception exception, bool isDevelopment)
+        {
+            if (exception == null)
+            {
+                return null;
+            }
+
+            var result = new
+            {
+                error = FormatMessage(exception.Message),
+                stackTrace = isDevelopment ? FormatStackTrace(exception.StackTrace) : new string[] { },
+                innerException = isDevelopment ? CreateExceptionResult(exception.InnerException, isDevelopment) : null
+            };
+
+            return result;
+        }
+
+        private static string[] FormatMessage(string message)
+        {
+            if (string.IsNullOrEmpty(message))
+            {
+                return new string[] { };
+            }
+
+            return message.Split(Environment.NewLine).Select(q => q.Trim()).ToArray();
+        }
+
+        private static string[] FormatStackTrace(string stackTrace)
+        {
+            if (string.IsNullOrEmpty(stackTrace))
+            {
+                return new string[] { };
+            }
+
+            return stackTrace.Split(Environment.NewLine).Select(q => q.Trim()).ToArray();
         }
     }
 }

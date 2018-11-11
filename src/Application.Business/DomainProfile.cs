@@ -17,37 +17,37 @@ namespace Application.Business
             CreateMap<CreateCourseCommand, Course>();
             CreateMap<UpdateCourseCommand, Course>();
             CreateMap<Course, CourseDetailModel>();
-            CreateMap<Course, CoursesListItemModel>();
+            CreateMap<Course, CoursesItemModel>();
 
             // Departments
             CreateMap<CreateDepartmentCommand, Department>();
             CreateMap<UpdateDepartmentCommand, Department>();
             CreateMap<Department, DepartmentDetailModel>();
-            CreateMap<Department, DepartmentsListItemModel>();
+            CreateMap<Department, DepartmentsItemModel>();
 
             // Enrollments
             CreateMap<CreateEnrollmentCommand, Enrollment>();
             CreateMap<UpdateEnrollmentCommand, Enrollment>();
             CreateMap<Enrollment, EnrollmentDetailModel>();
-            CreateMap<Enrollment, EnrollmentsListItemModel>();
+            CreateMap<Enrollment, EnrollmentsItemModel>();
 
             // Entities
             CreateMap<CreateEntityCommand, Entity>();
             CreateMap<UpdateEntityCommand, Entity>();
             CreateMap<Entity, EntityDetailModel>();
-            CreateMap<Entity, EntitiesListItemModel>();
+            CreateMap<Entity, EntitiesItemModel>();
 
             // UserCourses
             CreateMap<CreateUserCourseCommand, UserCourse>();
             CreateMap<UpdateUserCourseCommand, UserCourse>();
             CreateMap<UserCourse, UserCourseDetailModel>();
-            CreateMap<UserCourse, UserCoursesListItemModel>();
+            CreateMap<UserCourse, UserCoursesItemModel>();
 
             // Users
             CreateMap<CreateUserCommand, User>();
             CreateMap<UpdateUserCommand, User>();
             CreateMap<User, UserDetailModel>();
-            CreateMap<User, UsersListItemModel>();
+            CreateMap<User, UsersItemModel>();
         }
     }
 }

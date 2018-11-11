@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Application.Domain.SeedWork;
+using System;
 using System.Collections.Generic;
 
 namespace Application.Domain.ValueObjects
 {
-    public class Address : Infrastructure.ValueObject
+    public class Address : ValueObject
     {
         public string Country { get; }
         public string District { get; }
