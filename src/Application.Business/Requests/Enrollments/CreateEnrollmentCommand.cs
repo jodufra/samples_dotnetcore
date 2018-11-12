@@ -36,7 +36,7 @@ namespace Application.Business.Requests.Enrollments
         {
             var entity = mapper.Map<CreateEnrollmentCommand, Enrollment>(request);
 
-            await repository.AddAsync(entity, cancellationToken);
+            await repository.AddAsync(entity, true, cancellationToken);
 
             return entity.Id;
         }

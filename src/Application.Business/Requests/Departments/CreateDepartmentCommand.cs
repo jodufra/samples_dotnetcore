@@ -36,7 +36,7 @@ namespace Application.Business.Requests.Departments
         {
             var entity = mapper.Map<CreateDepartmentCommand, Department>(request);
 
-            await repository.AddAsync(entity, cancellationToken);
+            await repository.AddAsync(entity, true, cancellationToken);
 
             return entity.Id;
         }

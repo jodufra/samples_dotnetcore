@@ -36,7 +36,7 @@ namespace Application.Business.Requests.Courses
         {
             var entity = mapper.Map<CreateCourseCommand, Course>(request);
 
-            await repository.AddAsync(entity, cancellationToken);
+            await repository.AddAsync(entity, true, cancellationToken);
 
             return entity.Id;
         }

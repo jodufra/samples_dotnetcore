@@ -38,7 +38,7 @@ namespace Application.Business.Requests.UserCourses
                 throw new NotFoundException(typeof(UserCourse).Name, request.Id);
             }
 
-            await repository.RemoveAsync(entity, cancellationToken);
+            await repository.RemoveAsync(entity, true, cancellationToken);
 
             return Unit.Value;
         }

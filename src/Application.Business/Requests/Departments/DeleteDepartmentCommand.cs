@@ -39,7 +39,7 @@ namespace Application.Business.Requests.Departments
                 throw new NotFoundException(typeof(Department).Name, request.Id);
             }
 
-            await repository.RemoveAsync(entity, cancellationToken);
+            await repository.RemoveAsync(entity, true, cancellationToken);
 
             return Unit.Value;
         }

@@ -76,7 +76,7 @@ namespace Application.Business.Models
 
                 if (_thenBy != null)
                 {
-                    _thenBy.Apply(query);
+                    query = _thenBy.Apply(query);
                 }
 
                 return query;
@@ -88,7 +88,7 @@ namespace Application.Business.Models
 
                 if (_thenBy != null)
                 {
-                    _thenBy.Apply(query);
+                    query = _thenBy.Apply(query);
                 }
 
                 return query;

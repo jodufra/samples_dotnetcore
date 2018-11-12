@@ -3,6 +3,7 @@ using Application.Domain.Entities;
 using Application.Domain.SeedWork;
 using Application.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -12,11 +13,13 @@ namespace Application.Persistence
 {
     public class AppDbContext : DbContext, IUnitOfWork
     {
+        private readonly ILogger<AppDbContext> logger;
         private readonly IEventDispatcher dispatcher;
 
-        public AppDbContext(DbContextOptions options, IEventDispatcher dispatcher) : base(options)
+        public AppDbContext(DbContextOptions options, ILogger<AppDbContext> logger, IEventDispatcher dispatcher) : base(options)
         {
             this.dispatcher = dispatcher;
+            this.logger = logger;
         }
 
         public DbSet<Course> Courses { get; set; }
@@ -28,34 +31,36 @@ namespace Application.Persistence
 
         public override int SaveChanges()
         {
-            var entities = GetEntitiesWithDomainEvents();
-
-            var result = base.SaveChanges();
-
-            DispatchDomainEvents(entities);
-
-            return result;
+            return SaveChangesAsync().GetAwaiter().GetResult();
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var entities = GetEntitiesWithDomainEvents();
+            // Get all changed entities with non dispatched domain events 
+            var entities = ChangeTracker.Entries<BaseEntity>()
+                .Select(po => po.Entity)
+                .Where(po => po.DomainEvents.Any())
+                .ToArray();
 
+            // Persist all context changes so events can be dispatched
             var result = await base.SaveChangesAsync(cancellationToken);
 
+            // Now that the context is saved, we dispatch the events
             DispatchDomainEvents(entities);
 
+            // Number of state entries written to the database
             return result;
         }
 
-        private IEnumerable<BaseEntity> GetEntitiesWithDomainEvents()
+        protected void DispatchDomainEvents(IEnumerable<BaseEntity> entities)
         {
-            return ChangeTracker.Entries<BaseEntity>().Select(po => po.Entity).Where(po => po.DomainEvents.Any()).ToArray();
-        }
+            if (dispatcher == null)
+            {
+                logger.LogWarning($"'{nameof(dispatcher)}' is null. Domain events won't be dispatched.");
+                return;
+            }
 
-        private void DispatchDomainEvents(IEnumerable<BaseEntity> entities)
-        {
-            if (dispatcher is null || entities is null || !entities.Any())
+            if (entities == null)
             {
                 return;
             }
@@ -63,10 +68,12 @@ namespace Application.Persistence
             foreach (var entity in entities)
             {
                 var events = entity.DomainEvents.ToArray();
+
                 foreach (var domainEvent in events)
                 {
                     dispatcher.Dispatch(domainEvent);
                 }
+
                 entity.DomainEvents.Clear();
             }
         }

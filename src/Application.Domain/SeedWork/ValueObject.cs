@@ -8,21 +8,12 @@ namespace Application.Domain.SeedWork
     {
         protected ValueObject() { }
 
-        protected static bool EqualOperator(ValueObject left, ValueObject right)
-        {
-            if (left is null ^ right is null)
-            {
-                return false;
-            }
-            return left is null || left.Equals(right);
-        }
-
-        protected static bool NotEqualOperator(ValueObject left, ValueObject right)
-        {
-            return !(EqualOperator(left, right));
-        }
-
         protected abstract IEnumerable<object> GetAtomicValues();
+
+        public override int GetHashCode()
+        {
+            return GetAtomicValues().Select(x => x != null ? x.GetHashCode() : 0).Aggregate((x, y) => x ^ y);
+        }
 
         public override bool Equals(object obj)
         {
@@ -49,9 +40,18 @@ namespace Application.Domain.SeedWork
             return !thisValues.MoveNext() && !otherValues.MoveNext();
         }
 
-        public override int GetHashCode()
+        protected static bool EqualOperator(ValueObject left, ValueObject right)
         {
-            return GetAtomicValues().Select(x => x != null ? x.GetHashCode() : 0).Aggregate((x, y) => x ^ y);
+            if (left is null ^ right is null)
+            {
+                return false;
+            }
+            return left is null || left.Equals(right);
+        }
+
+        protected static bool NotEqualOperator(ValueObject left, ValueObject right)
+        {
+            return !(EqualOperator(left, right));
         }
     }
 }

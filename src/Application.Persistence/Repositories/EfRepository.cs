@@ -40,23 +40,19 @@ namespace Application.Persistence.Repositories
             return FindAsync(request, default).GetAwaiter().GetResult();
         }
 
-        public void Add(TEntity entity)
+        public void Add(TEntity entity, bool saveChanges = true)
         {
-            entity.DateCreated = dateTime.Now;
-
-            context.Set<TEntity>().Add(entity);
+            AddAsync(entity, saveChanges).GetAwaiter().GetResult();
         }
 
-        public void Remove(TEntity entity)
+        public void Remove(TEntity entity, bool saveChanges = true)
         {
-            context.Set<TEntity>().Remove(entity);
+            RemoveAsync(entity, saveChanges).GetAwaiter().GetResult();
         }
 
-        public void Update(TEntity entity)
+        public void Update(TEntity entity, bool saveChanges = true)
         {
-            entity.DateUpdated = dateTime.Now;
-
-            context.Entry(entity).State = EntityState.Modified;
+            UpdateAsync(entity, saveChanges).GetAwaiter().GetResult();
         }
 
         public Task<TEntity> FindByIdAsync(int id, CancellationToken cancellationToken)
@@ -107,22 +103,29 @@ namespace Application.Persistence.Repositories
             return new RepositoryResult<TEntity>(items, totalCount);
         }
 
-        public Task AddAsync(TEntity entity, CancellationToken cancellationToken)
+        public Task AddAsync(TEntity entity, bool saveChanges = true, CancellationToken cancellationToken = default)
         {
-            Add(entity);
-            return context.SaveChangesAsync(cancellationToken);
+            entity.DateCreated = dateTime.Now;
+
+            context.Set<TEntity>().Add(entity);
+
+            return saveChanges ? context.SaveChangesAsync(cancellationToken) : Task.CompletedTask;
         }
 
-        public Task RemoveAsync(TEntity entity, CancellationToken cancellationToken)
+        public Task RemoveAsync(TEntity entity, bool saveChanges = true, CancellationToken cancellationToken = default)
         {
-            Remove(entity);
-            return context.SaveChangesAsync(cancellationToken);
+            context.Set<TEntity>().Remove(entity);
+
+            return saveChanges ? context.SaveChangesAsync(cancellationToken) : Task.CompletedTask;
         }
 
-        public Task UpdateAsync(TEntity entity, CancellationToken cancellationToken)
+        public Task UpdateAsync(TEntity entity, bool saveChanges = true, CancellationToken cancellationToken = default)
         {
-            Update(entity);
-            return context.SaveChangesAsync(cancellationToken);
+            entity.DateUpdated = dateTime.Now;
+
+            context.Entry(entity).State = EntityState.Modified;
+
+            return saveChanges ? context.SaveChangesAsync(cancellationToken) : Task.CompletedTask;
         }
     }
 }

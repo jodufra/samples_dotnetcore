@@ -16,7 +16,7 @@ namespace Application.Persistence
 
         protected override AppDbContext CreateNewInstance(DbContextOptions<AppDbContext> options)
         {
-            return new AppDbContext(options, new DesignTimeEventDispatcher());
+            return new AppDbContext(options, new DesignTimeLogger(), new DesignTimeEventDispatcher());
         }
     }
 }

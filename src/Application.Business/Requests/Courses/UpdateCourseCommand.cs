@@ -46,7 +46,7 @@ namespace Application.Business.Requests.Courses
 
             entity = mapper.Map(request, entity);
 
-            await repository.UpdateAsync(entity, cancellationToken);
+            await repository.UpdateAsync(entity, true, cancellationToken);
 
             return Unit.Value;
         }

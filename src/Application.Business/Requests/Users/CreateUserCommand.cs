@@ -43,7 +43,7 @@ namespace Application.Business.Requests.Users
 
             entity.AddDomainEvent(new OnUserCreatedEvent(entity));
 
-            await repository.AddAsync(entity, cancellationToken);
+            await repository.AddAsync(entity, true, cancellationToken);
 
             return entity.Id;
         }
