@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace Application.Business.Models
 {
-    public class RepositoryOrder<TSource> where TSource : BaseEntity
+    public class RepositoryOrder<TSource> where TSource : Entity
     {
         private readonly OrderExpression _orderBy;
 

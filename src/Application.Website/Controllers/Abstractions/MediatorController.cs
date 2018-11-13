@@ -21,7 +21,8 @@ namespace Application.Website.Controllers.Abstractions
 
         protected CreatedResult Created(int id)
         {
-            return Created(new Uri(id.ToString(), UriKind.Relative), id);
+            var path = new PathString($"/api/{GetType().Name.Replace("Controller", "")}/Get/{id}");
+            return Created(new Uri(path, UriKind.Relative), id);
         }
     }
 }

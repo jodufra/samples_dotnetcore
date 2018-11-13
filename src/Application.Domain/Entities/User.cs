@@ -1,24 +1,33 @@
-﻿using System;
+﻿using Application.Domain.SeedWork;
 using System.Collections.Generic;
-using Application.Domain.Enumerations;
-using Application.Domain.SeedWork;
 
 namespace Application.Domain.Entities
 {
-    public class User : BaseEntity
+    public class User : Entity
     {
         public User()
         {
             Enrollments = new HashSet<Enrollment>();
             Courses = new HashSet<UserCourse>();
+            Address = Address.Empty;
+            Cellphone = Phone.Empty;
+            Telephone = Phone.Empty;
         }
 
-        public int EntityId { get; set; }
-        public string Name { get; set; }
-        public UserType Type { get; set; }
+        public int UserTypeId { get; set; }
 
-        public Entity Entity { get; set; }
+        public string Name { get; set; }
+
+        public Address Address { get; set; }
+
+        public Phone Cellphone { get; set; }
+
+        public Phone Telephone { get; set; }
+
+        public UserType UserType { get; set; }
+
         public ICollection<Enrollment> Enrollments { get; set; }
+
         public ICollection<UserCourse> Courses { get; set; }
     }
 }

@@ -25,9 +25,9 @@ namespace Application.Persistence
         public DbSet<Course> Courses { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
-        public DbSet<Entity> Entities { get; set; }
-        public DbSet<UserCourse> UserCourses { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserCourse> UserCourses { get; set; }
+        public DbSet<UserType> UserTypes { get; set; }
 
         public override int SaveChanges()
         {
@@ -37,22 +37,21 @@ namespace Application.Persistence
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             // Get all changed entities with non dispatched domain events 
-            var entities = ChangeTracker.Entries<BaseEntity>()
+            var entities = ChangeTracker.Entries<Entity>()
                 .Select(po => po.Entity)
-                .Where(po => po.DomainEvents.Any())
-                .ToArray();
+                .Where(po => po.DomainEvents.Any());
 
             // Persist all context changes so events can be dispatched
             var result = await base.SaveChangesAsync(cancellationToken);
 
             // Now that the context is saved, we dispatch the events
-            DispatchDomainEvents(entities);
+            await DispatchDomainEventsAsync(entities, cancellationToken);
 
             // Number of state entries written to the database
             return result;
         }
 
-        protected void DispatchDomainEvents(IEnumerable<BaseEntity> entities)
+        private async Task DispatchDomainEventsAsync(IEnumerable<Entity> domainEntities, CancellationToken cancellationToken = default)
         {
             if (dispatcher == null)
             {
@@ -60,21 +59,18 @@ namespace Application.Persistence
                 return;
             }
 
-            if (entities == null)
+            var domainEvents = domainEntities.SelectMany(q => q.DomainEvents).ToList();
+
+            var tasks = domainEvents.Select(async (domainEvent) =>
             {
-                return;
-            }
+                await dispatcher.DispatchAsync(domainEvent, cancellationToken);
+            });
 
-            foreach (var entity in entities)
+            await Task.WhenAll(tasks);
+
+            foreach (var entity in domainEntities)
             {
-                var events = entity.DomainEvents.ToArray();
-
-                foreach (var domainEvent in events)
-                {
-                    dispatcher.Dispatch(domainEvent);
-                }
-
-                entity.DomainEvents.Clear();
+                entity.ClearDomainEvents();
             }
         }
 

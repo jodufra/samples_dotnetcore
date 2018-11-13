@@ -3,7 +3,7 @@ using System.Reflection;
 using Application.Business;
 using Application.Business.Infrastructure;
 using Application.Business.Interfaces;
-using Application.Business.Requests.Users;
+using Application.Business.Services.Users;
 using Application.Common;
 using Application.Infrastructure;
 using Application.Persistence;

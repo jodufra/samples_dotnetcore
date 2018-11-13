@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Application.Persistence.Configurations
 {
-    public class CourseConfiguration : IEntityTypeConfiguration<Course>
+    public class CourseConfiguration : EntityConfiguration<Course>
     {
-        public void Configure(EntityTypeBuilder<Course> builder)
+        public override void Configure(EntityTypeBuilder<Course> builder)
         {
+            base.Configure(builder);
         }
     }
 }

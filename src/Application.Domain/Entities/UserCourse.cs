@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Application.Domain.Enumerations;
 using Application.Domain.SeedWork;
 
 namespace Application.Domain.Entities
 {
-    public class UserCourse : BaseEntity
+    public class UserCourse : Entity
     {
         public UserCourse()
         {

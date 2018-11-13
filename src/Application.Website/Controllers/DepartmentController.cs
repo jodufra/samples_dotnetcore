@@ -1,4 +1,4 @@
-﻿using Application.Business.Requests.Departments;
+﻿using Application.Business.Services.Departments;
 using Application.Website.Controllers.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

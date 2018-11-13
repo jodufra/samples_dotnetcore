@@ -1,4 +1,4 @@
-﻿using Application.Business.Requests.Enrollments;
+﻿using Application.Business.Services.Enrollments;
 using Application.Website.Controllers.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

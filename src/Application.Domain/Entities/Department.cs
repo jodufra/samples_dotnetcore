@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Application.Domain.Entities
 {
-    public class Department : BaseEntity
+    public class Department : Entity
     {
         public Department()
         {

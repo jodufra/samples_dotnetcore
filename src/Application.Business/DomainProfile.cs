@@ -1,9 +1,8 @@
-﻿using Application.Business.Requests.Courses;
-using Application.Business.Requests.Departments;
-using Application.Business.Requests.Enrollments;
-using Application.Business.Requests.Entities;
-using Application.Business.Requests.UserCourses;
-using Application.Business.Requests.Users;
+﻿using Application.Business.Services.Courses;
+using Application.Business.Services.Departments;
+using Application.Business.Services.Enrollments;
+using Application.Business.Services.UserCourses;
+using Application.Business.Services.Users;
 using Application.Domain.Entities;
 using AutoMapper;
 
@@ -30,12 +29,6 @@ namespace Application.Business
             CreateMap<UpdateEnrollmentCommand, Enrollment>();
             CreateMap<Enrollment, EnrollmentDetailModel>();
             CreateMap<Enrollment, EnrollmentsItemModel>();
-
-            // Entities
-            CreateMap<CreateEntityCommand, Entity>();
-            CreateMap<UpdateEntityCommand, Entity>();
-            CreateMap<Entity, EntityDetailModel>();
-            CreateMap<Entity, EntitiesItemModel>();
 
             // UserCourses
             CreateMap<CreateUserCourseCommand, UserCourse>();

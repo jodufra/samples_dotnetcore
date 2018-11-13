@@ -20,7 +20,6 @@ namespace Application.Website
                 try
                 {
                     var context = scope.ServiceProvider.GetService<AppDbContext>();
-                    context.Database.Migrate();
 
                     AppDbInitializer.Initialize(context);
                 }

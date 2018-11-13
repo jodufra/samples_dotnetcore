@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace Application.Business.Models
 {
-    public class RepositoryQuery<TSource> where TSource : BaseEntity
+    public class RepositoryQuery<TSource> where TSource : Entity
     {
         private List<Expression<Func<TSource, bool>>> Expressions { get; set; }
 

@@ -27,10 +27,6 @@ namespace Application.Persistence.Migrations
 
                     b.Property<int>("Credits");
 
-                    b.Property<DateTime>("DateCreated");
-
-                    b.Property<DateTime?>("DateUpdated");
-
                     b.Property<int>("DepartmentId");
 
                     b.Property<string>("Name");
@@ -48,13 +44,9 @@ namespace Application.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("DateCreated");
-
                     b.Property<DateTime>("DateEnd");
 
                     b.Property<DateTime>("DateStart");
-
-                    b.Property<DateTime?>("DateUpdated");
 
                     b.Property<string>("Name");
 
@@ -75,11 +67,7 @@ namespace Application.Persistence.Migrations
 
                     b.Property<int>("CourseId");
 
-                    b.Property<DateTime>("DateCreated");
-
                     b.Property<DateTime?>("DateGraded");
-
-                    b.Property<DateTime?>("DateUpdated");
 
                     b.Property<float?>("Grade");
 
@@ -94,42 +82,19 @@ namespace Application.Persistence.Migrations
                     b.ToTable("Enrollments");
                 });
 
-            modelBuilder.Entity("Application.Domain.Entities.Entity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("DateCreated");
-
-                    b.Property<DateTime?>("DateUpdated");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Entities");
-                });
-
             modelBuilder.Entity("Application.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("DateCreated");
-
-                    b.Property<DateTime?>("DateUpdated");
-
-                    b.Property<int>("EntityId");
-
                     b.Property<string>("Name");
 
-                    b.Property<int>("Type");
+                    b.Property<int>("UserTypeId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EntityId");
+                    b.HasIndex("UserTypeId");
 
                     b.ToTable("Users");
                 });
@@ -142,10 +107,6 @@ namespace Application.Persistence.Migrations
 
                     b.Property<int>("CourseId");
 
-                    b.Property<DateTime>("DateCreated");
-
-                    b.Property<DateTime?>("DateUpdated");
-
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
@@ -155,6 +116,19 @@ namespace Application.Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserCourses");
+                });
+
+            modelBuilder.Entity("Application.Domain.Entities.UserType", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasDefaultValue(1);
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserTypes");
                 });
 
             modelBuilder.Entity("Application.Domain.Entities.Course", b =>
@@ -187,10 +161,80 @@ namespace Application.Persistence.Migrations
 
             modelBuilder.Entity("Application.Domain.Entities.User", b =>
                 {
-                    b.HasOne("Application.Domain.Entities.Entity", "Entity")
-                        .WithMany("Users")
-                        .HasForeignKey("EntityId")
+                    b.HasOne("Application.Domain.Entities.UserType", "UserType")
+                        .WithMany()
+                        .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.OwnsOne("Application.Domain.Entities.Address", "Address", b1 =>
+                        {
+                            b1.Property<int>("UserId")
+                                .ValueGeneratedOnAdd()
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Country");
+
+                            b1.Property<string>("County");
+
+                            b1.Property<string>("District");
+
+                            b1.Property<string>("Door");
+
+                            b1.Property<string>("Location");
+
+                            b1.Property<string>("PostalCode");
+
+                            b1.Property<string>("Street");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.HasOne("Application.Domain.Entities.User")
+                                .WithOne("Address")
+                                .HasForeignKey("Application.Domain.Entities.Address", "UserId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
+
+                    b.OwnsOne("Application.Domain.Entities.Phone", "Cellphone", b1 =>
+                        {
+                            b1.Property<int>("UserId")
+                                .ValueGeneratedOnAdd()
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Number");
+
+                            b1.Property<string>("Prefix");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.HasOne("Application.Domain.Entities.User")
+                                .WithOne("Cellphone")
+                                .HasForeignKey("Application.Domain.Entities.Phone", "UserId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
+
+                    b.OwnsOne("Application.Domain.Entities.Phone", "Telephone", b1 =>
+                        {
+                            b1.Property<int>("UserId")
+                                .ValueGeneratedOnAdd()
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Number");
+
+                            b1.Property<string>("Prefix");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.HasOne("Application.Domain.Entities.User")
+                                .WithOne("Telephone")
+                                .HasForeignKey("Application.Domain.Entities.Phone", "UserId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
                 });
 
             modelBuilder.Entity("Application.Domain.Entities.UserCourse", b =>

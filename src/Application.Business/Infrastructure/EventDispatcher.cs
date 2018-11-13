@@ -18,19 +18,14 @@ namespace Application.Business.Infrastructure
             this.logger = logger;
         }
 
-        public void Dispatch(IDomainEvent domainEvent)
+        public async Task DispatchAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default)
         {
-            DispatchAsync(domainEvent).GetAwaiter().GetResult();
-        }
+            await DispatchDomainEventAsync(domainEvent);
 
-        public Task DispatchAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default)
-        {
             if (domainEvent is INotification notification)
             {
-                return DispatchNotificationAsync(notification, cancellationToken);
+                await DispatchNotificationAsync(notification, cancellationToken);
             }
-
-            return DispatchEventAsync(domainEvent);
         }
 
         private Task DispatchNotificationAsync(INotification notification, CancellationToken cancellationToken = default)
@@ -38,7 +33,7 @@ namespace Application.Business.Infrastructure
             return mediator.Publish(notification, cancellationToken);
         }
 
-        private Task DispatchEventAsync(IDomainEvent domainEvent)
+        private Task DispatchDomainEventAsync(IDomainEvent domainEvent)
         {
             logger.LogInformation("Domain Event: {@DomainEvent}", domainEvent);
 

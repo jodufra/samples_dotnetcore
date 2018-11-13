@@ -4,14 +4,14 @@ using System;
 
 namespace Application.Business.Models
 {
-    public class RepositoryRequest<T> where T : BaseEntity
+    public class RepositoryRequest<T> where T : Entity
     {
         public RepositoryRequest()
         {
             PageId = 1;
             PageSize = Constants.DEFAULT_PAGE_SIZE;
             Query = new RepositoryQuery<T>();
-            Order = RepositoryOrder<T>.OrderByDescending(q => q.DateCreated);
+            Order = RepositoryOrder<T>.OrderBy(q => q.Id);
         }
 
         private int? pageId;

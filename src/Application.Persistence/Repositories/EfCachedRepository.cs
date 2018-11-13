@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Application.Persistence.Repositories
 {
     public class EfCachedRepository<TEntity> : IReadOnlyRepository<TEntity>
-        where TEntity : BaseEntity
+        where TEntity : Entity
     {
         private readonly IRepository<TEntity> repository;
         private readonly IMemoryCache cache;
@@ -25,37 +25,6 @@ namespace Application.Persistence.Repositories
 
             cacheKey = typeof(TEntity).Name;
             cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(relative: TimeSpan.FromSeconds(Constants.DEFAULT_CACHE_SECONDS));
-        }
-
-        public virtual List<TEntity> List()
-        {
-            return cache.GetOrCreate(cacheKey, entry =>
-            {
-                entry.SetOptions(cacheOptions);
-                return repository.List();
-            });
-        }
-
-        public TEntity FindById(int id)
-        {
-            var key = $"{cacheKey}-{id}";
-
-            return cache.GetOrCreate(key, entry =>
-            {
-                entry.SetOptions(cacheOptions);
-                return repository.FindById(id);
-            });
-        }
-
-        public RepositoryResult<TEntity> Find(RepositoryRequest<TEntity> request)
-        {
-            var key = $"{cacheKey}-Find-{request.GetHashCode()}";
-
-            return cache.GetOrCreate(key, entry =>
-            {
-                entry.SetOptions(cacheOptions);
-                return repository.Find(request);
-            });
         }
 
         public Task<List<TEntity>> ListAsync(CancellationToken cancellationToken)

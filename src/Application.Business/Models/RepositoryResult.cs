@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Application.Business.Models
 {
-    public class RepositoryResult<T> where T : BaseEntity
+    public class RepositoryResult<T> where T : Entity
     {
         public IEnumerable<T> Items { get; set; }
         public int ItemsCount { get; set; }

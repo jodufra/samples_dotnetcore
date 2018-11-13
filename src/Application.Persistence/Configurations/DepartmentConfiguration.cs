@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Application.Persistence.Configurations
 {
-    public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
+    public class DepartmentConfiguration : EntityConfiguration<Department>
     {
-        public void Configure(EntityTypeBuilder<Department> builder)
+        public override void Configure(EntityTypeBuilder<Department> builder)
         {
+            base.Configure(builder);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Application.Business.Requests.Courses;
+﻿using Application.Business.Services.Courses;
 using Application.Website.Controllers.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Http;

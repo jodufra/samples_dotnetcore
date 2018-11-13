@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Persistence.Repositories
 {
-    public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
+    public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {
         protected readonly AppDbContext context;
         protected readonly IDateTime dateTime;
@@ -23,37 +23,7 @@ namespace Application.Persistence.Repositories
             this.dateTime = dateTime;
         }
 
-        public IUnitOfWork UnitOfWork { get => context; }
-
-        public List<TEntity> List()
-        {
-            return ListAsync(default).GetAwaiter().GetResult();
-        }
-
-        public TEntity FindById(int id)
-        {
-            return FindByIdAsync(id, default).GetAwaiter().GetResult();
-        }
-
-        public RepositoryResult<TEntity> Find(RepositoryRequest<TEntity> request)
-        {
-            return FindAsync(request, default).GetAwaiter().GetResult();
-        }
-
-        public void Add(TEntity entity, bool saveChanges = true)
-        {
-            AddAsync(entity, saveChanges).GetAwaiter().GetResult();
-        }
-
-        public void Remove(TEntity entity, bool saveChanges = true)
-        {
-            RemoveAsync(entity, saveChanges).GetAwaiter().GetResult();
-        }
-
-        public void Update(TEntity entity, bool saveChanges = true)
-        {
-            UpdateAsync(entity, saveChanges).GetAwaiter().GetResult();
-        }
+        public IUnitOfWork UnitOfWork => context;
 
         public Task<TEntity> FindByIdAsync(int id, CancellationToken cancellationToken)
         {
@@ -105,24 +75,26 @@ namespace Application.Persistence.Repositories
 
         public Task AddAsync(TEntity entity, bool saveChanges = true, CancellationToken cancellationToken = default)
         {
-            entity.DateCreated = dateTime.Now;
-
-            context.Set<TEntity>().Add(entity);
+            if (entity.IsTransient())
+            {
+                context.Set<TEntity>().Add(entity);
+            }
 
             return saveChanges ? context.SaveChangesAsync(cancellationToken) : Task.CompletedTask;
         }
 
         public Task RemoveAsync(TEntity entity, bool saveChanges = true, CancellationToken cancellationToken = default)
         {
-            context.Set<TEntity>().Remove(entity);
+            if (!entity.IsTransient())
+            {
+                context.Set<TEntity>().Remove(entity);
+            }
 
             return saveChanges ? context.SaveChangesAsync(cancellationToken) : Task.CompletedTask;
         }
 
         public Task UpdateAsync(TEntity entity, bool saveChanges = true, CancellationToken cancellationToken = default)
         {
-            entity.DateUpdated = dateTime.Now;
-
             context.Entry(entity).State = EntityState.Modified;
 
             return saveChanges ? context.SaveChangesAsync(cancellationToken) : Task.CompletedTask;

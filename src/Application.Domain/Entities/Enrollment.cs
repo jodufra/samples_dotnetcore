@@ -3,7 +3,7 @@ using System;
 
 namespace Application.Domain.Entities
 {
-    public class Enrollment : BaseEntity
+    public class Enrollment : Entity
     {
         public Enrollment()
         {

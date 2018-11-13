@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Application.Persistence.Configurations
 {
-    public class EnrollmentConfiguration : IEntityTypeConfiguration<Enrollment>
+    public class EnrollmentConfiguration : EntityConfiguration<Enrollment>
     {
-        public void Configure(EntityTypeBuilder<Enrollment> builder)
+        public override void Configure(EntityTypeBuilder<Enrollment> builder)
         {
+            base.Configure(builder);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Application.Domain.Entities
 {
-    public class Course : BaseEntity
+    public class Course : Entity
     {
         public Course()
         {
